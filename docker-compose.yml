@@ -14,6 +14,11 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
       - rabbitmq_log:/var/log/rabbitmq
 
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"  # Redis default port
 
   web:
     build: .
@@ -25,8 +30,11 @@ services:
       - "8000:8000"
     depends_on:
       - rabbitmq
+      - redis
     environment:
       - RABBITMQ_URL=amqp://user:password@rabbitmq:5672/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
 volumes:
   rabbitmq_data:
